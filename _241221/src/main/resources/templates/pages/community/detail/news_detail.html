@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default_layout}">
+<head>
+    <title>news Detail</title>
+    <link rel="stylesheet" th:inline="css" th:href="@{/css/commu/review.css}">
+    <script th:inline="javascript" type="text/javascript" th:src="@{/js/commu/review.js}"></script>
+</head>
+<th:block layout:fragment="content">
+    <div class="content">
+        <div class="review-detail">
+            <h1 th:text="${news.title}">제목</h1>
+            <p th:text="${news.content}">내용</p>
+            <div class="review-images">
+                <div th:each="image : ${news.imageUrls}">
+                    <img th:src="@{${image}}" alt="이미지" />
+                </div>
+            </div>
+            <a href="/news/list" class="back-to-list">목록으로 돌아가기</a>
+
+            <!-- 삭제 버튼 -->
+            <form th:action="@{/news/delete/{id}(id=${news.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('정말로 이 게시글을 삭제하시겠습니까?');">삭제</button>
+            </form>
+        </div>
+    </div>
+</th:block>
+</html>
