@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +18,32 @@ public class NewsService {
 
     @Autowired
     private NewsRepository newsRepository;
+
+    //Id로 찾기
+    public News getNewsById(Long id) {
+        return newsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid news ID"));
+    }
+
+    //이전글
+    public News getPreviousNews(Long id) {
+        return newsRepository.findTopByIdLessThanOrderByIdDesc(id).orElse(null);
+    }
+    //다음글
+    public News getNextNews(Long id) {
+        return newsRepository.findTopByIdGreaterThanOrderByIdAsc(id).orElse(null);
+    }
+
+
+
+    // 조회수 증가 메서드
+    @Transactional
+    public void incrementViews(News news) {
+        // 조회수 증가
+        news.setViews(news.getViews() + 1);
+
+        // 업데이트된 뉴스 저장
+        newsRepository.save(news);
+    }
 
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
@@ -57,4 +84,52 @@ public class NewsService {
 
         return imageUrls;
     }
+
+
+
+    // 게시글 삭제 메서드
+    public void deleteNews(Long id) {
+        News review = newsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
+
+        // 이미지 삭제
+        for (String imageUrl : review.getImageUrls()) {
+            String imagePath = "src/main/resources/static" + imageUrl;  // 이미지 경로
+            deleteImage(imagePath);  // 이미지 삭제 메서드 호출
+        }
+
+        newsRepository.delete(review);  // 리뷰 삭제
+    }
+
+    private void deleteImage(String imagePath) {
+        Path path = Paths.get(imagePath);
+        try {
+            Files.deleteIfExists(path);  // 파일이 존재하면 삭제
+        } catch (IOException e) {
+            e.printStackTrace();  // 파일 삭제 오류 처리
+        }
+    }
+
+    // 게시글 수정 메서드
+    public void updateNews(Long id, News updatedNews, List<MultipartFile> images) throws IOException {
+        News news = getNewsById(id);
+        news.setTitle(updatedNews.getTitle());
+        news.setContent(updatedNews.getContent());
+
+        if (images != null && !images.isEmpty()) {
+            // 기존 이미지 삭제
+            for (String imageUrl : news.getImageUrls()) {
+                String imagePath = "src/main/resources/static" + imageUrl;  // 이미지 경로
+                deleteImage(imagePath);  // 이미지 삭제 메서드 호출
+            }
+
+            // 새로운 이미지 저장
+            List<String> imageUrls = saveImages(images);
+            news.setImageUrls(imageUrls); // 이미지 URL을 뉴스 객체에 설정
+        }
+
+        newsRepository.save(news); // 뉴스 객체 저장
+    }
+
+
 }

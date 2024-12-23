@@ -1,16 +1,22 @@
 /* board.css */
 
+table a{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
 /* 게시판 영역 스타일 */
 
 .board {
     display: flex;
     justify-content: center;  /* 수평 가운데 정렬 */
+
 }
 
 .board-list {
-    width: 70%;
+    width: 1200px;
     background-color: #fff;  /* 배경색 추가 (선택 사항) */
-    border-top: 3px solid #c75e5e;
 }
 
 /* 테이블 스타일 */
@@ -20,6 +26,7 @@
 
     border-radius: 5px;
     overflow: hidden;
+
 }
 
 .board-list th, .board-list td {
@@ -36,7 +43,7 @@
 
     border-bottom: 1px solid #ddd;
     font-size: 16px;
-    color: #343434;
+    color: #5a5a5a;
 }
 
 /* 번호는 중앙 정렬 */
@@ -95,7 +102,7 @@
 
 .pagination {
     text-align: center;
-    margin-top: 20px;
+    margin : 20px 0;
 }
 
 .pagination a {

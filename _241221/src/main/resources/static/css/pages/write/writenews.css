@@ -10,7 +10,6 @@
 
 .form-box {
     width: 1200px;
-    border-top: 2px solid #c75e5e;
 }
 
 
@@ -48,15 +47,17 @@
 /* --------------------------- */
 .input-item textarea {
     width: 100%;
-    height: 350px; /* 높이는 고정되어 있으면, 그에 맞춰서 이미지 비율이 조정됩니다 */
+    height: 350px;
     padding: 20px;
     border: 1px solid #585858;
     border-radius: 5px;
     overflow: auto;
     word-wrap: break-word;
     box-sizing: border-box; /* 패딩을 포함한 크기 계산 */
+    white-space: pre-wrap; /* 줄바꿈을 처리하도록 설정 */
+    font-family: inherit; /* 부모 요소의 폰트 상속 */
+    font-size: inherit; /* 부모 요소의 폰트 크기 상속 */
 }
-
 
 /* --------------------------- */
 

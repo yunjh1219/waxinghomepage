@@ -35,4 +35,8 @@ public class News {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    // 조회수 필드 추가
+    @Column(nullable = false)
+    private Long views = 0L;  // 기본값 0으로 설정
+
 }

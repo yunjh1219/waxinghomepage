@@ -87,12 +87,19 @@
 /*TITLE*/
 /*----------------------*/
 .commu-title {
+    position: relative;
+
     justify-content: center; /* 수평 중앙 정렬 */
     align-items: center; /* 수직 중앙 정렬 */
     height: 100%; /* 부모 요소의 높이에 맞춤 */
     text-align: center; /* 텍스트 중앙 정렬 */
-    padding: 80px;
+    padding-top: 80px;
+    padding-bottom: 30px;
+    background-color: white;
 
+    margin: 0 auto; /* 좌우 여백을 자동으로 설정하여 중앙 정렬 */
+    width: 1200px;
+    border-bottom: 2px solid #c75e5e;
 }
 
 .commu-title h1{
@@ -101,5 +108,6 @@
 
 .commu-title a{
     font-size: 20px;
+    color: #c75e5e;
 }
 /*----------------------*/

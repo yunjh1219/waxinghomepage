@@ -27,20 +27,21 @@
       </nav>
     </div>
     <div class="commu-title">
-      <h1>NEWS</h1>
-      <a>소식</a>
+      <h1>소식</h1>
+      <a>NEWS</a>
     </div>
     <div class="board">
       <div class="board-list">
         <table>
           <thead>
-
           </thead>
           <tbody>
           <!-- 게시글 목록 반복 -->
           <tr th:each="news : ${news}">
             <td th:text="${news.id}"></td> <!-- 번호 -->
-            <td th:text="${news.title}"></td> <!-- 제목 -->
+            <td>
+              <a th:href="@{/news/detail/{id}(id=${news.id})}" th:text="${news.title}"></a>
+            </td> <!-- 제목 -->
             <td th:text="${#temporals.format(news.createdAt, 'yyyy-MM-dd')}"></td> <!-- 작성일 -->
           </tr>
           </tbody>
