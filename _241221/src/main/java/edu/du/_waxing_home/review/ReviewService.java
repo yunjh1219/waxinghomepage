@@ -1,5 +1,7 @@
-package edu.du._waxing_home.news;
+package edu.du._waxing_home.review;
 
+
+import edu.du._waxing_home.news.News;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,55 +16,56 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class NewsService {
+public class ReviewService {
+
 
     @Autowired
-    private NewsRepository newsRepository;
+    private ReviewRepository reviewRepository;
+
 
     //Id로 찾기
-    public News getNewsById(Long id) {
-        return newsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid news ID"));
+    public Review getReviewById(Long id) {
+        return reviewRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid news ID"));
     }
 
     //이전글
-    public News getPreviousNews(Long id) {
-        return newsRepository.findTopByIdLessThanOrderByIdDesc(id).orElse(null);
+    public Review getPreviousReview(Long id) {
+        return reviewRepository.findTopByIdLessThanOrderByIdDesc(id).orElse(null);
     }
     //다음글
-    public News getNextNews(Long id) {
-        return newsRepository.findTopByIdGreaterThanOrderByIdAsc(id).orElse(null);
+    public Review getNextReview(Long id) {
+        return reviewRepository.findTopByIdGreaterThanOrderByIdAsc(id).orElse(null);
     }
-
-
 
     // 조회수 증가 메서드
     @Transactional
-    public void incrementViews(News news) {
+    public void incrementViews(Review review) {
         // 조회수 증가
-        news.setViews(news.getViews() + 1);
+        review.setViews(review.getViews() + 1);
 
         // 업데이트된 뉴스 저장
-        newsRepository.save(news);
+        reviewRepository.save(review);
     }
 
+
+    public List<Review> getAllReview() {
+        return reviewRepository.findAll();
+    }
+
+    // 이미지 저장
     private static final String UPLOAD_DIR = "src/main/resources/static/uploads/";
 
-    // 게시판 목록 불러오기
-    public List<News> getAllNews() {
-        return newsRepository.findAllByOrderByCreatedAtDesc();
-    }
-
     // 이미지가 없는 경우
-    public void saveNews(News news) {
-        newsRepository.save(news);
+    public void saveReview(Review review) {
+        reviewRepository.save(review);
     }
 
     // 이미지가 있는 경우
-    public void saveNewsWithImages(News news, List<MultipartFile> images) throws IOException {
+    public void saveReviewWithImages(Review review, List<MultipartFile> images) throws IOException {
         // 이미지 저장 후 이미지 URL 목록을 반환
         List<String> imageUrls = saveImages(images);
-        news.setImageUrls(imageUrls); // 이미지 URL을 뉴스 객체에 설정
-        newsRepository.save(news); // 뉴스 객체와 이미지를 함께 저장
+        review.setImageUrls(imageUrls); // 이미지 URL을 뉴스 객체에 설정
+        reviewRepository.save(review); // 뉴스 객체와 이미지를 함께 저장
     }
 
     // 이미지 저장 메서드
@@ -85,20 +88,18 @@ public class NewsService {
         return imageUrls;
     }
 
-
-
     // 게시글 삭제 메서드
-    public void deleteNews(Long id) {
-        News news = newsRepository.findById(id)
+    public void deleteReview(Long id) {
+        Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid review ID"));
 
         // 이미지 삭제
-        for (String imageUrl : news.getImageUrls()) {
+        for (String imageUrl : review.getImageUrls()) {
             String imagePath = "src/main/resources/static/" + imageUrl;  // 이미지 경로
             deleteImage(imagePath);  // 이미지 삭제 메서드 호출
         }
 
-        newsRepository.delete(news);  // 리뷰 삭제
+        reviewRepository.delete(review);  // 리뷰 삭제
     }
 
     private void deleteImage(String imagePath) {
@@ -110,26 +111,29 @@ public class NewsService {
         }
     }
 
+
+
     // 게시글 수정 메서드
-    public void updateNews(Long id, News updatedNews, List<MultipartFile> images) throws IOException {
-        News news = getNewsById(id);
-        news.setTitle(updatedNews.getTitle());
-        news.setContent(updatedNews.getContent());
+    public void updateReview(Long id, Review updatedReview, List<MultipartFile> images) throws IOException {
+        Review review = getReviewById(id);
+        review.setTitle(updatedReview.getTitle());
+        review.setContent(updatedReview.getContent());
 
         if (images != null && !images.isEmpty()) {
             // 기존 이미지 삭제
-            for (String imageUrl : news.getImageUrls()) {
+            for (String imageUrl : review.getImageUrls()) {
                 String imagePath = "src/main/resources/static" + imageUrl;  // 이미지 경로
                 deleteImage(imagePath);  // 이미지 삭제 메서드 호출
             }
 
             // 새로운 이미지 저장
             List<String> imageUrls = saveImages(images);
-            news.setImageUrls(imageUrls); // 이미지 URL을 뉴스 객체에 설정
+            review.setImageUrls(imageUrls); // 이미지 URL을 뉴스 객체에 설정
         }
 
-        newsRepository.save(news); // 뉴스 객체 저장
+        reviewRepository.save(review); // 뉴스 객체 저장
     }
+
 
 
 }

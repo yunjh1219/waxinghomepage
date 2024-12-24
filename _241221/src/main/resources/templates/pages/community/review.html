@@ -20,18 +20,43 @@
       </div>
       <nav class="commu-header-nav">
         <ul>
-          <li><a href="/event" class="#">이벤트</a></li>
+          <li><a href="/event/list" class="#">이벤트</a></li>
           <li><a href="/news/list" class="#">피플소식</a></li>
-          <li><a href="/review" class="active">시술후기</a></li>
+          <li><a href="/review/list" class="active">시술후기</a></li>
         </ul>
       </nav>
     </div>
 
     <div class="commu-title">
-      <h1>REVIEW</h1>
-      <a>리뷰</a>
+      <h1>리뷰</h1>
+      <a>REVIEW</a>
     </div>
-
+    <div class="board">
+      <div class="board-list">
+        <table>
+          <thead>
+          </thead>
+          <tbody>
+          <!-- 게시글 목록 반복 -->
+          <tr th:each="review : ${review}">
+            <td th:text="${review.id}"></td> <!-- 번호 -->
+            <td th:text="${review.treatment}"></td>
+            <td><!-- 제목 -->
+              <a th:href="@{/review/detail/{id}(id=${review.id})}" th:text="${review.title}"></a>
+            </td>
+            <td th:text="${#temporals.format(review.createdAt, 'yyyy-MM-dd')}"></td> <!-- 작성일 -->
+          </tr>
+          </tbody>
+        </table>
+        <a href="/writereview" class="create-post-link">글쓰기</a>
+        <!-- 페이지네이션 -->
+        <div class="pagination">
+          <a href="#">&lt;</a>  <!-- 이전 페이지 버튼 -->
+          <a href="#" class="active">1</a>  <!-- 현재 페이지 -->
+          <a href="#">&gt;</a>  <!-- 다음 페이지 버튼 -->
+        </div>
+      </div>
+    </div>
   </div>
 </th:block>
 </html>

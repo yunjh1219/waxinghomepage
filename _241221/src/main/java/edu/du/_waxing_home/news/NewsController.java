@@ -101,7 +101,7 @@ public class NewsController {
             return "redirect:/news/detail/" + id;
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("error", "소식 수정에 실패했습니다.");
-            return "redirect:/news/edit/" + id;
+            return "redirect:/news/write/writenews/" + id;
         }
     }
 
